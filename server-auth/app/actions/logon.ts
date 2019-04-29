@@ -37,6 +37,10 @@ export class LogonAction extends Action{
         return 'INSERT INTO usuario (username, password) values (\'' + this.req.body.userName + '\' , \'' + this.req.body.password + '\')';
     }
 
+    private generateSQLCadastrarSabor() : string {
+        return ' insert into sabor (nomeSabor, preco, tamanho_idTamanho) values ( \'' + this.req.body.nomeSabor + '\' ,' + this.req.body.preco + ', ' +  this.req.body.idTamanho + ' ) ';
+    }
+
     private generateSQLGetUsuarios() : string {
         return 'select * from usuario';
     }
@@ -74,6 +78,20 @@ export class LogonAction extends Action{
     @Post('/cadastro')
     public cadastrarUsuario(){
         new MySQLFactory().getConnection().select(this.generateSQLCadastrarUsuario()).subscribe(
+            (data : any) => {
+                console.log(data);
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                console.log(error);
+                this.sendError(error);
+            }
+        );
+    }
+
+    @Post('/cadastroSabor')
+    public cadastrarSabor(){
+        new MySQLFactory().getConnection().select(this.generateSQLCadastrarSabor()).subscribe(
             (data : any) => {
                 console.log(data);
                 this.sendAnswer(data);

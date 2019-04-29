@@ -54,6 +54,9 @@ var LogonAction = /** @class */ (function (_super) {
     LogonAction.prototype.generateSQLCadastrarUsuario = function () {
         return 'INSERT INTO usuario (username, password) values (\'' + this.req.body.userName + '\' , \'' + this.req.body.password + '\')';
     };
+    LogonAction.prototype.generateSQLCadastrarSabor = function () {
+        return ' insert into sabor (nomeSabor, preco, tamanho_idTamanho) values ( \'' + this.req.body.nomeSabor + '\' ,' + this.req.body.preco + ', ' + this.req.body.idTamanho + ' ) ';
+    };
     LogonAction.prototype.generateSQLGetUsuarios = function () {
         return 'select * from usuario';
     };
@@ -82,6 +85,16 @@ var LogonAction = /** @class */ (function (_super) {
     LogonAction.prototype.cadastrarUsuario = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQLCadastrarUsuario()).subscribe(function (data) {
+            console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            console.log(error);
+            _this.sendError(error);
+        });
+    };
+    LogonAction.prototype.cadastrarSabor = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQLCadastrarSabor()).subscribe(function (data) {
             console.log(data);
             _this.sendAnswer(data);
         }, function (error) {
@@ -165,6 +178,12 @@ var LogonAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], LogonAction.prototype, "cadastrarUsuario", null);
+    __decorate([
+        decorators_1.Post('/cadastroSabor'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], LogonAction.prototype, "cadastrarSabor", null);
     __decorate([
         decorators_1.Post('/delUsuario'),
         __metadata("design:type", Function),
