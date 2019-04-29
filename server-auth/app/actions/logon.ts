@@ -46,7 +46,10 @@ export class LogonAction extends Action{
     }
 
     private generateSQLAlterarUsuario() : string {
-        return 'update from usuario where idusuario = 1';
+        return 'update usuario ' +        
+        ' set password = \'' + this.req.body.password + '\' '+
+        ' where idusuario = ' + this.req.body.idusuario +
+        '   and username = \'' + this.req.body.userName + '\'';
     }
 
 
@@ -60,12 +63,7 @@ export class LogonAction extends Action{
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                   return;
                 }
-                
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase(),
-                    userName : this.req.body.userName,
-                    password : this.req.body.password
-                });
+                this.sendAnswer({data});
             },
             (error : any) => {
                 this.sendError(error);

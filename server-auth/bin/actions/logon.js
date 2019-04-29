@@ -26,7 +26,6 @@ var decorators_1 = require("../decorators");
 var decorators_2 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
-var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
 var LogonAction = /** @class */ (function (_super) {
@@ -62,7 +61,10 @@ var LogonAction = /** @class */ (function (_super) {
         return 'delete from usuario where idusuario = ' + this.req.body.idUsuario + ' and username = \'' + this.req.body.userName + '\'';
     };
     LogonAction.prototype.generateSQLAlterarUsuario = function () {
-        return 'update from usuario where idusuario = 1';
+        return 'update usuario ' +
+            ' set password = \'' + this.req.body.password + '\' ' +
+            ' where idusuario = ' + this.req.body.idusuario +
+            '   and username = \'' + this.req.body.userName + '\'';
     };
     LogonAction.prototype.Post = function () {
         var _this = this;
@@ -72,11 +74,7 @@ var LogonAction = /** @class */ (function (_super) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                 return;
             }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase(),
-                userName: _this.req.body.userName,
-                password: _this.req.body.password
-            });
+            _this.sendAnswer({ data: data });
         }, function (error) {
             _this.sendError(error);
         });
